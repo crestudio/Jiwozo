@@ -1,0 +1,24 @@
+{
+  "name": "com.vrsuya.jiwozo",
+  "version": "1.0.0",
+  "displayName": "VRSuya - Jiwozo",
+  "description": "Unity Cleanup Assistance Program",
+  "unity": "2019.4",
+  "documentationUrl": "https://github.com/crestudio/Jiwozo/blob/master/README.md",
+  "changelogUrl": "https://github.com/crestudio/Jiwozo/blob/master/README.md",
+  "licensesUrl": "https://github.com/crestudio/Jiwozo/blob/master/LICENSE",
+  "keywords": [
+    "VRSuya",
+    "VRChat"
+  ],
+  "author": {
+    "name": "Macchiato",
+    "email": "crestudioplus@gmail.com",
+    "url": "https://github.com/crestudio"
+  },
+  "url": "https://github.com/crestudio/Jiwozo",
+  "repo": "https://server.macchiato.kr/vpm/vpm.json",
+  "vpmDependencies": {
+    "com.vrchat.avatars": ">=3.0.9"
+  }
+}
