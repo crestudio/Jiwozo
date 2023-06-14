@@ -28,7 +28,7 @@ namespace com.vrsuya.jiwozo {
         }
 
 		[MenuItem("Tools/VRSuya/Jiwozo/Remove All Missing Script Component")]
-		/// <summary>Scene에 존재하는 Missing 컴포넌트를 포함한 GameObject를 선택합니다</summary>
+		/// <summary>Scene에 존재하는 Missing 컴포넌트들을 삭제합니다</summary>
 		public static void RemoveMissingComponents() {
 			Component[] MissingComponents = GetAllMissingComponents();
 			if (MissingComponents.Length > 0) {
