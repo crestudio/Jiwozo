@@ -14,9 +14,13 @@ namespace com.vrsuya.jiwozo {
 		public static void SelectMissingGameObjects() {
             Component[] MissingComponents = GetAllMissingComponents();
             if (MissingComponents.Length > 0) {
-                GameObject[] MissingGameObjects = MissingComponents.Select(TargetComponent => TargetComponent.gameObject).ToArray();
+				Undo.IncrementCurrentGroup();
+				Undo.SetCurrentGroupName("Select All Missing GameObject");
+				int UndoGroupIndex = Undo.GetCurrentGroup();
+				GameObject[] MissingGameObjects = MissingComponents.Select(TargetComponent => TargetComponent.gameObject).ToArray();
 				Selection.objects = MissingGameObjects;
                 Debug.Log("[VRSuya] " + MissingComponents.Length + " GameObjects have Missing Component Selected");
+				Undo.CollapseUndoOperations(UndoGroupIndex);
 			} else {
 				Debug.Log("[VRSuya] Not found GameObject has Missing Component");
 			}
@@ -28,8 +32,15 @@ namespace com.vrsuya.jiwozo {
 		public static void RemoveMissingComponents() {
 			Component[] MissingComponents = GetAllMissingComponents();
 			if (MissingComponents.Length > 0) {
+				Undo.IncrementCurrentGroup();
+				Undo.SetCurrentGroupName("Remove All Missing Component");
+				int UndoGroupIndex = Undo.GetCurrentGroup();
 				for (int Index = 0; Index < MissingComponents.Length; Index++) {
+					GameObject DirtyGameObject = MissingComponents[Index].gameObject;
+					Undo.RecordObject(DirtyGameObject, "Remove All Missing Component");
 					DestroyImmediate(MissingComponents[Index]);
+					EditorUtility.SetDirty(DirtyGameObject);
+					Undo.CollapseUndoOperations(UndoGroupIndex);
 				}
 				Debug.Log("[VRSuya] " + MissingComponents.Length + " Missing Script Components Removed");
 			} else {
