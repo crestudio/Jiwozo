@@ -12,14 +12,13 @@ namespace com.vrsuya.jiwozo {
         [MenuItem("Tools/VRSuya/Jiwozo/Select All GameObject of Missing Script")]
 		/// <summary>Scene에 존재하는 Missing 컴포넌트를 포함한 GameObject를 선택합니다</summary>
 		public static void SelectMissingGameObjects() {
-            Component[] MissingComponents = GetAllMissingComponents();
-            if (MissingComponents.Length > 0) {
+			GameObject[] MissingGameObjects = GetAllGameObjectHasMissingComponent();
+            if (MissingGameObjects.Length > 0) {
 				Undo.IncrementCurrentGroup();
 				Undo.SetCurrentGroupName("Select All Missing GameObject");
 				int UndoGroupIndex = Undo.GetCurrentGroup();
-				GameObject[] MissingGameObjects = MissingComponents.Select(TargetComponent => TargetComponent.gameObject).ToArray();
 				Selection.objects = MissingGameObjects;
-                Debug.Log("[VRSuya] " + MissingComponents.Length + " GameObjects have Missing Component Selected");
+                Debug.Log("[VRSuya] " + MissingGameObjects.Length + " GameObjects have Missing Component Selected");
 				Undo.CollapseUndoOperations(UndoGroupIndex);
 			} else {
 				Debug.Log("[VRSuya] Not found GameObject has Missing Component");
@@ -30,31 +29,38 @@ namespace com.vrsuya.jiwozo {
 		[MenuItem("Tools/VRSuya/Jiwozo/Remove All Missing Script Component")]
 		/// <summary>Scene에 존재하는 Missing 컴포넌트들을 삭제합니다</summary>
 		public static void RemoveMissingComponents() {
-			Component[] MissingComponents = GetAllMissingComponents();
-			if (MissingComponents.Length > 0) {
+			GameObject[] MissingGameObjects = GetAllGameObjectHasMissingComponent();
+			if (MissingGameObjects.Length > 0) {
 				Undo.IncrementCurrentGroup();
 				Undo.SetCurrentGroupName("Remove All Missing Component");
 				int UndoGroupIndex = Undo.GetCurrentGroup();
-				for (int Index = 0; Index < MissingComponents.Length; Index++) {
-					GameObject DirtyGameObject = MissingComponents[Index].gameObject;
-					Undo.RecordObject(DirtyGameObject, "Remove All Missing Component");
-					DestroyImmediate(MissingComponents[Index]);
-					EditorUtility.SetDirty(DirtyGameObject);
+				int DeletedComponentCount = 0;
+				foreach (GameObject TargetGameObject in MissingGameObjects) {
+					Undo.RecordObject(TargetGameObject, "Remove All Missing Component");
+					int MissingComponentCount = Array.FindAll(TargetGameObject.GetComponents<Component>(), TargetComponent => TargetComponent == null).ToArray().Length;
+					UnityEditorInternal.ComponentUtility.DestroyComponentsMatching(TargetGameObject, TargetComponent => TargetComponent == null);
+					DeletedComponentCount = DeletedComponentCount + MissingComponentCount;
+					EditorUtility.SetDirty(TargetGameObject);
 					Undo.CollapseUndoOperations(UndoGroupIndex);
 				}
-				Debug.Log("[VRSuya] " + MissingComponents.Length + " Missing Script Components Removed");
+				Debug.Log("[VRSuya] " + DeletedComponentCount + " Missing Script Components Removed");
 			} else {
 				Debug.Log("[VRSuya] Not found Missing Script Component");
 			}
 			return;
 		}
 
-		/// <summary>Scene에 존재하는 Missing 컴포넌트 배열을 반환합니다</summary>
-		/// <returns>Scene에 존재하는 모든 Missing 컴포넌트 배열</returns>
-		private static Component[] GetAllMissingComponents() {
-			Component[] AllComponents = SceneManager.GetActiveScene().GetRootGameObjects().SelectMany(gameObject => gameObject.GetComponentsInChildren<Component>(true)).ToArray();
-            Component[] MissingComponents = Array.FindAll(AllComponents, TargetComponent => TargetComponent == null).ToArray();
-            return MissingComponents;
+		/// <summary>Scene에 존재하는 Missing 컴포넌트를 가지고 있는 GameObject 배열을 반환합니다</summary>
+		/// <returns>Scene에 존재하는 모든 Missing 컴포넌트를 가지고 있는 GameObject 배열</returns>
+		private static GameObject[] GetAllGameObjectHasMissingComponent() {
+			GameObject[] MissingGameObjects = new GameObject[0];
+			Transform[] AllTransforms = SceneManager.GetActiveScene().GetRootGameObjects().SelectMany(gameObject => gameObject.GetComponentsInChildren<Transform>(true)).ToArray();
+			foreach (Transform TargetTransform in AllTransforms) {
+				if (Array.Exists(TargetTransform.GetComponents<Component>(), TargetComponent => TargetComponent == null)) {
+					MissingGameObjects = MissingGameObjects.Concat(new GameObject[] { TargetTransform.gameObject }).ToArray();
+				}
+			}
+            return MissingGameObjects;
         }
     }
 }
