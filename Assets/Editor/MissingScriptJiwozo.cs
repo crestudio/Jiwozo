@@ -37,8 +37,7 @@ namespace com.vrsuya.jiwozo {
 				int DeletedComponentCount = 0;
 				foreach (GameObject TargetGameObject in MissingGameObjects) {
 					Undo.RecordObject(TargetGameObject, "Remove All Missing Component");
-					int MissingComponentCount = Array.FindAll(TargetGameObject.GetComponents<Component>(), TargetComponent => TargetComponent == null).ToArray().Length;
-					UnityEditorInternal.ComponentUtility.DestroyComponentsMatching(TargetGameObject, TargetComponent => TargetComponent == null);
+					int MissingComponentCount = GameObjectUtility.RemoveMonoBehavioursWithMissingScript(TargetGameObject);
 					DeletedComponentCount = DeletedComponentCount + MissingComponentCount;
 					EditorUtility.SetDirty(TargetGameObject);
 					Undo.CollapseUndoOperations(UndoGroupIndex);
