@@ -1,6 +1,6 @@
 # Jiwozo
 
-![Component](https://github.com/crestudio/Jiwozo/blob/master/Image/VRSuya_Jiwozo.jpg?raw=true)
+![Component](https://github.com/crestudio/Jiwozo/blob/main/Image/VRSuya_Jiwozo.jpg?raw=true)
 
 ## 다운로드
 
