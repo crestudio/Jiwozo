@@ -4,7 +4,7 @@
 
 ## 다운로드
 
-[VCC 패키지 추가](https://crestudio.notion.site/)
+[VCC 패키지 추가](https://crestudio.notion.site/Jiwozo-b1c3b930edfd41b1b60baa0ea1c9f9a6)
 
 [UnityPackage 다운로드](https://github.com/crestudio/Jiwozo/releases)
 
