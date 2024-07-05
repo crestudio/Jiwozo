@@ -7,7 +7,8 @@ using UnityEditor;
 
 namespace com.vrsuya.jiwozo {
 
-    public class MissingScriptJiwozo : EditorWindow {
+	[ExecuteInEditMode]
+	public class MissingScriptJiwozo : EditorWindow {
 
         [MenuItem("Tools/VRSuya/Jiwozo/Select All GameObject of Missing Script")]
 		/// <summary>Scene에 존재하는 Missing 컴포넌트를 포함한 GameObject를 선택합니다</summary>
